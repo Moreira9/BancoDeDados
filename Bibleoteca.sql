@@ -26,11 +26,29 @@ create table Usuarios(
 
 );
 
+
+
+
+
+create table Livros(
+	id_livro int primary key auto_increment,
+    titulo varchar(45),
+    numero_pag int,
+    estoque int,
+    data_publicacao date
+    
+    
+    
+);
+
 create table Emprestimos(
 	id_emprestimo int primary key auto_increment,
     data_retirada date,
     data_devolucao date,
-    statuss varchar(45)
+    statuss varchar(45),
+    livros_id_livros int
+    
+   
 
 );
 
@@ -44,18 +62,6 @@ create table usuarios_has_emprestimos(
     
 );
 
-create table Livros(
-	id_livro int primary key auto_increment,
-    titulo varchar(45),
-    numero_pag int,
-    estoque int,
-    data_publicacao date,
-    emprestimos_id_emprestimo int,
-    
-    foreign key (emprestimos_id_emprestimo) references Emprestimos(id_emprestimo)
-    
-
-);
 
 create table autores_has_livros(
 	autores_id_autores int,
@@ -64,5 +70,13 @@ create table autores_has_livros(
     foreign key (autores_id_autores) references Autores(id_autores),
     foreign key (livros_id_livro) references Livros(id_livro)
 
+);
+
+create table generos_has_livros (
+    generos_id_generos int,
+    livros_id_livros int,
+    
+    foreign key (generos_id_generos) references Generos(id_generos),
+    foreign key (livros_id_livros) references Livros(id_livro)
 );
 

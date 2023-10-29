@@ -19,18 +19,18 @@ VALUES
     (4 , 'Ana Carolina', '45678901234', '15678901', 456, '954321098'),
     (5, 'Luísa Medeiros', '46789012345', '16789012', 567, '943210987');
     
-INSERT INTO emprestimos (id_emprestimo, data_retirada, data_devolucao, statuss)
+INSERT INTO emprestimos (id_emprestimo, data_retirada, data_devolucao, statuss, livros_id_livros)
 VALUES
-    (1, '2023-10-27', '2023-11-27', "Esta no prazo"),
-    (2,'2023-09-30','2023-10-30',"Esta no prazo"),
-    (3,'2023-08-11','2023-09-11',"Atrazado"),
-    (4, '2023-09-12', '2023-10-12', "Atrazado"),
-    (5, '2023-9-27', '2023-10-27', "Dia da entrega"),
-    (6,'2023-10-03','2023-11-03',"Esta no prazo"),
-    (7,'2023-08-11','2023-09-11',"Atrazado"),
-    (8, '2023-07-15', '2023-8-15', "Atrazado"),
-    (9, '2023-10-02', '2023-11-02', "Esta no prazo"),
-    (10,'2023-6-30','2023-7-30',"Atrazado");
+    (1, '2023-10-27', '2023-11-27', "Esta no prazo",1),
+    (2,'2023-09-30','2023-10-30',"Esta no prazo ",1),
+    (3,'2023-08-11','2023-09-11',"Atrazado",2),
+    (4, '2023-09-12', '2023-10-12', "Atrazado",2),
+    (5, '2023-9-27', '2023-10-27', "Dia da entrega",3),
+    (6,'2023-10-03','2023-11-03',"Esta no prazo",3),
+    (7,'2023-08-11','2023-09-11',"Atrazado",4),
+    (8, '2023-07-15', '2023-8-15', "Atrazado",4),
+    (9, '2023-10-02', '2023-11-02', "Esta no prazo",5),
+    (10,'2023-6-30','2023-7-30',"Atrazado",5);
 INSERT INTO Autores (id_autores, nome_autor, nacionalidade_autor, data_nasc, profissao)
 VALUES
     (1, 'Lewis Carroll', 'Inglês', '1832-01-27', 'Escritor'),
@@ -38,26 +38,26 @@ VALUES
     (3, 'Miguel de Cervantes', 'Espanhol', '1547-09-29', 'Escritor' ),
     (4, 'George Orwell', 'Inglês', '1903-06-25', 'Escritor' ),
     (5, 'Jane Austen', 'Inglês', '1775-12-16', 'Escritora');
-INSERT INTO Livros (id_livro, titulo, numero_pag, estoque, data_publicacao,emprestimos_id_emprestimo)
+INSERT INTO Livros (id_livro, titulo, numero_pag, estoque, data_publicacao)
 VALUES
-    (1 , 'Aventuras de Alice no País das Maravilhas', 100, 5, '1865-11-26',1),
-    (2 ,  'O Senhor dos Anéis', 1178, 30, '1954-07-29',1),
-    (3 , 'Dom Quixote', 863, 60, '1605-01-16',1),
-    (4 , '1984', 328, 40, '1949-06-08',2),
-    (5 , 'Orgulho e Preconceito', 432, 70, '1813-01-28',3);
+    (1 , 'Aventuras de Alice no País das Maravilhas', 100, 5, '1865-11-26'),
+    (2 ,  'O Senhor dos Anéis', 1178, 30, '1954-07-29'),
+    (3 , 'Dom Quixote', 863, 60, '1605-01-16'),
+    (4 , '1984', 328, 40, '1949-06-08'),
+    (5 , 'Orgulho e Preconceito', 432, 70, '1813-01-28');
 INSERT INTO usuarios_has_emprestimos (usuarios_id_usuario,emprestimos_id_emprestimo)
 VALUES
+    (1,1),
     (1,2),
     (1,3),
-    (1,2),
-    (1,2),
-    (2,3),
-	(1,2),
-    (2,3),
-    (1,2),
-    (1,2),
-    (2,3),
-    (1,2);
+    (1,5),
+    (2,1),
+	(2,2),
+    (3,1),
+    (3,4),
+    (4,5),
+    (5,1),
+    (5,2);
     INSERT INTO autores_has_livros (autores_id_autores, livros_id_livro)
 VALUES
     (1,1),
