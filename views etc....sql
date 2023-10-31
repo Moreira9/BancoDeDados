@@ -1,33 +1,44 @@
 use Biblioteca;
-CREATE OR REPLACE VIEW vwlivros AS
+CREATE OR REPLACE VIEW DetalhesEmprestimos AS
 SELECT
-    Livros.id_livro AS id,
-    Livros.titulo AS "titulo",
-    GROUP_CONCAT(Autores.nome_autor) AS "autores",
-    Livros.numero_pag AS "número de páginas",
-    Livros.data_publicacao AS "data de publicação",
-    Livros.estoque AS "estoque",
-    GROUP_CONCAT(Generos.nome_genero) AS "gêneros"
-FROM Livros
-JOIN autores_has_livros ON autores_has_livros.livros_id_livro = Livros.id_livro
-JOIN Autores ON autores_has_livros.autores_id_autores = Autores.id_autores
-JOIN generos_has_livros ON generos_has_livros.livros_id_livros = Livros.id_livro
-JOIN Generos ON generos_has_livros.generos_id_generos = Generos.id_generos
-GROUP BY Livros.id_livro, Livros.titulo, Livros.numero_pag, Livros.data_publicacao, Livros.estoque;
+    E.id_emprestimo AS 'ID do Empréstimo',
+    L.titulo AS 'Título do Livro',
+    MAX(A.nome_autor) AS 'Nome do Autor',
+    GROUP_CONCAT(G.nome_genero) AS 'Gêneros',
+    ANY_VALUE(U.nome) AS 'Nome do Leitor', -- Utilize ANY_VALUE para a coluna de não agregação
+    MAX(E.data_retirada) AS 'Data de Retirada',
+    MAX(E.data_devolucao) AS 'Data de Devolução',
+    MAX(E.statuss) AS 'Status do Empréstimo'
+FROM Emprestimos AS E
+JOIN Livros AS L ON E.livros_id_livros = L.id_livro
+JOIN autores_has_livros AS AHL ON L.id_livro = AHL.livros_id_livro
+JOIN Autores AS A ON AHL.autores_id_autores = A.id_autores
+JOIN generos_has_livros AS GL ON L.id_livro = GL.livros_id_livros
+JOIN Generos AS G ON GL.generos_id_generos = G.id_generos
+JOIN usuarios_has_emprestimos AS UE ON E.id_emprestimo = UE.emprestimos_id_emprestimo
+JOIN Usuarios AS U ON UE.usuarios_id_usuario = U.id_usuario
+GROUP BY E.id_emprestimo, L.titulo;
 
 
-DELIMITER $
+DELIMITER //
 
-CREATE  PROCEDURE InserirEmprestimo(
+CREATE PROCEDURE CriarEmprestimo(
+    IN emprestimo_id INT ,
     IN data_retirada DATE,
     IN data_devolucao DATE,
-    IN statuss VARCHAR(45),
-    IN livros_id_livros INT
+    IN status_emprestimo VARCHAR(45),
+    IN livro_id INT,
+    IN usuario_id INT
 )
 BEGIN
-    INSERT INTO Emprestimos (data_retirada, data_devolucao, statuss, livros_id_livros)
-    VALUES (data_retirada, data_devolucao, statuss, livros_id_livros);
-END$
+    -- Inserir o registro na tabela emprestimos
+    INSERT INTO emprestimos (id_emprestimo, data_retirada, data_devolucao, statuss, livros_id_livros)
+    VALUES (emprestimo_id, data_retirada, data_devolucao, status_emprestimo, livro_id);
+
+    -- Inserir o registro na tabela usuarios_has_emprestimos
+    INSERT INTO usuarios_has_emprestimos (usuarios_id_usuario, emprestimos_id_emprestimo)
+    VALUES (usuario_id, emprestimo_id);
+END //
 
 DELIMITER ;
 
